@@ -11,6 +11,7 @@ router.get('/users', function(req, res, next){
     });
 });
 
+
 //get single
 router.get('/users/:id', function(req, res, next){
     db.users.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err,user){
@@ -20,28 +21,39 @@ router.get('/users/:id', function(req, res, next){
 });
 
 //Register user
-router.post('/users', function(req, res, next){
+router.post('/userReg', function(req, res, next){
     var user = req.body;
-    if(!user.name||(user.pass + '')){
-        res.status(400);
-        res.json({
-            "error" :"Informações inválidas!!!"
-        });
-    }else{
         db.users.save(user, function(err, users){
             if(err) res.send(err);
-            res.json(users);
+            res.json(user);
         });
-    }
 });
+
+/*$.ajax
+({
+  type: "PUT",
+  url: "localhost:3000/api/userEdit/",
+  dataType: 'json',
+  async: false,
+  headers: {
+    "Authorization": "Basic " + btoa(USERNAME + ":" + PASSWORD)
+  },
+  data: '{ "comment" }',
+  success: function (){
+    var json= db.users.find({"name": USERNAME});
+    var pass=json.password;
+    if(pass==PASSWORD)
+    alert('Edite seus dados!');
+  }
+});*/
 
 //Edit user
 router.put('/userEdit/:id', function(req,res,next){
     var user = req.body;
     var updUser = {};
-    if(user.name && user.pass && user.address && user.email && user.phone){
+    if(user.name && user.password && user.address && user.email && user.phone){
         updUser.name = user.name;
-        updUser.pass = user.pass;
+        updUser.password = user.password;
         updUser.address = user.address;
         updUser.email = user.email;
         updUser.phone = user.phone;
